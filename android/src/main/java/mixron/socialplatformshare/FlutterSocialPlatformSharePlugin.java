@@ -200,12 +200,12 @@ public class FlutterSocialPlatformSharePlugin implements MethodCallHandler, Flut
      * @param caption   String
      * @param mediaPath String
      */
-    private void shareToFacebook(String caption, String mediaPath) {
+    private void shareToFacebook(String caption, String mediaPath, Result result) {
         File media = new File(mediaPath);
         Uri fileUri = FileProvider.getUriForFile(activity,
                 activity.getApplicationContext().getPackageName() + ".provider", media);
         SharePhoto photo = new SharePhoto.Builder()
-                .setImageUrl(uri)
+                .setImageUrl(fileUri)
                 .setCaption(caption)
                 .build();
         SharePhotoContent content = new SharePhotoContent.Builder()
@@ -215,20 +215,17 @@ public class FlutterSocialPlatformSharePlugin implements MethodCallHandler, Flut
         shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
             @Override
             public void onSuccess(Sharer.Result result) {
-                channel.invokeMethod("onSuccess", null);
-                Log.d("SocialSharePlugin", "Sharing successfully done.");
+                System.out.println("--------------------success");
             }
 
             @Override
             public void onCancel() {
-                channel.invokeMethod("onCancel", null);
-                Log.d("SocialSharePlugin", "Sharing cancelled.");
+                System.out.println("-----------------onCancel");
             }
 
             @Override
             public void onError(FacebookException error) {
-                channel.invokeMethod("onError", error.getMessage());
-                Log.d("SocialSharePlugin", "Sharing error occurred.");
+                System.out.println("---------------onError");
             }
         });
         if (ShareDialog.canShow(SharePhotoContent.class)) {
