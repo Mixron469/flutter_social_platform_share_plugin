@@ -25,118 +25,112 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         self.result = result
-        if(call.method.elementsEqual(_methodWhatsApp)){
-            let args = call.arguments as? Dictionary<String,Any>
-            
-            if args!["url"] as! String == "" {
-                // if don't pass url then pass blank so if can strat normal whatsapp
-                shareWhatsApp(message: args!["msg"] as! String,imageUrl: "",type: args!["fileType"] as! String,result: result)
-            }else{
-                // if user pass url then use that
-                shareWhatsApp(message: args!["msg"] as! String,imageUrl: args!["url"] as! String,type: args!["fileType"] as! String,result: result)
-            }
-            
-        }
-        else if(call.method.elementsEqual(_methodWhatsAppBusiness)){
-            
-            // There is no way to open WB in IOS.
-            result(FlutterMethodNotImplemented)
-            
-            //            let args = call.arguments as? Dictionary<String,Any>
-            //
-            //            if args!["url"]as! String == "" {
-            //                // if don't pass url then pass blank so if can strat normal whatsapp
-            //                shareWhatsApp4Biz(message: args!["msg"] as! String, result: result)
-            //            }else{
-            //                // if user pass url then use that
-            //                // wil open share sheet and user can select open for there.
-            //                //                shareWhatsApp(message: args!["msg"] as! String,imageUrl: args!["url"] as! String,result: result)
-            //            }
-        }
-        else if(call.method.elementsEqual(_methodWhatsAppPersonal)){
-            let args = call.arguments as? Dictionary<String,Any>
-            shareWhatsAppPersonal(message: args!["msg"]as! String, phoneNumber: args!["phoneNumber"]as! String, result: result)
-        }
-        else if(call.method.elementsEqual(_methodFaceBook)){
-            guard let args = call.arguments else {
-                result(false)
-                break
-            }
-            if let myArgs = args as? [String: Any],
-               let path = myArgs["path"] as? String
-            {
-                let fbURL = URL(string: "fbapi://")
-                if let fbURL = fbURL {
-                    if UIApplication.shared.canOpenURL(fbURL) {
-                        facebookShare(path)
-                        // result(nil)
-                    } else {
-                        let fbLink = "itms-apps://itunes.apple.com/us/app/apple-store/id284882215"
-                        if #available(iOS 10.0, *) {
-                            if let url = URL(string: fbLink) {
-                                UIApplication.shared.open(url, options: [:]) { _ in
+        switch call.method {
+            case _methodWhatsApp:
+                let args = call.arguments as? Dictionary<String,Any>
+                if args!["url"] as! String == "" {
+                    // if don't pass url then pass blank so if can strat normal whatsapp
+                    shareWhatsApp(message: args!["msg"] as! String,imageUrl: "",type: args!["fileType"] as! String,result: result)
+                }else{
+                    // if user pass url then use that
+                    shareWhatsApp(message: args!["msg"] as! String,imageUrl: args!["url"] as! String,type: args!["fileType"] as! String,result: result)
+                }
+            case _methodWhatsAppBusiness:
+                // There is no way to open WB in IOS.
+                result(FlutterMethodNotImplemented)
+                
+                //            let args = call.arguments as? Dictionary<String,Any>
+                //
+                //            if args!["url"]as! String == "" {
+                //                // if don't pass url then pass blank so if can strat normal whatsapp
+                //                shareWhatsApp4Biz(message: args!["msg"] as! String, result: result)
+                //            }else{
+                //                // if user pass url then use that
+                //                // wil open share sheet and user can select open for there.
+                //                //                shareWhatsApp(message: args!["msg"] as! String,imageUrl: args!["url"] as! String,result: result)
+                //            }
+            case _methodWhatsAppPersonal:
+                let args = call.arguments as? Dictionary<String,Any>
+                shareWhatsAppPersonal(message: args!["msg"]as! String, phoneNumber: args!["phoneNumber"]as! String, result: result)
+            case _methodFaceBook:
+                guard let args = call.arguments else {
+                    result(false)
+                    break
+                }
+                if let myArgs = args as? [String: Any],
+                let path = myArgs["path"] as? String
+                {
+                    let fbURL = URL(string: "fbapi://")
+                    if let fbURL = fbURL {
+                        if UIApplication.shared.canOpenURL(fbURL) {
+                            facebookShare(path)
+                            // result(nil)
+                        } else {
+                            let fbLink = "itms-apps://itunes.apple.com/us/app/apple-store/id284882215"
+                            if #available(iOS 10.0, *) {
+                                if let url = URL(string: fbLink) {
+                                    UIApplication.shared.open(url, options: [:]) { _ in
+                                    }
+                                }
+                            } else {
+                                if let url = URL(string: fbLink) {
+                                    UIApplication.shared.openURL(url)
                                 }
                             }
-                        } else {
-                            if let url = URL(string: fbLink) {
-                                UIApplication.shared.openURL(url)
-                            }
+                            result(false)
                         }
-                        result(false)
                     }
+                } else {
+                    result(false)
                 }
-            } else {
-                result(false)
-            }
-            // let args = call.arguments as? Dictionary<String,Any>
-            // sharefacebook(message: args!, result: result)
-        }else if (call.method.elementsEqual(_methodFaceBookLink)) {
-            guard let args = call.arguments else {
-                result(false)
-                break
-            }
-            if let myArgs = args as? [String: Any],
-               let quote = myArgs["quote"] as? String,
-               let url = myArgs["url"] as? String
-            {
-                let fbURL = URL(string: "fbapi://")
-                if let fbURL = fbURL {
-                    if UIApplication.shared.canOpenURL(fbURL) {
-                        facebookShareLink(quote, url: url)
-                        // result(nil)
-                    } else {
-                        let fbLink = "itms-apps://itunes.apple.com/us/app/apple-store/id284882215"
-                        if #available(iOS 10.0, *) {
-                            if let url = URL(string: fbLink) {
-                                UIApplication.shared.open(url, options: [:]) { _ in
+                // let args = call.arguments as? Dictionary<String,Any>
+                // sharefacebook(message: args!, result: result)
+            case _methodFaceBookLink:
+                guard let args = call.arguments else {
+                    result(false)
+                    break
+                }
+                if let myArgs = args as? [String: Any],
+                let quote = myArgs["quote"] as? String,
+                let url = myArgs["url"] as? String
+                {
+                    let fbURL = URL(string: "fbapi://")
+                    if let fbURL = fbURL {
+                        if UIApplication.shared.canOpenURL(fbURL) {
+                            facebookShareLink(quote, url: url)
+                            // result(nil)
+                        } else {
+                            let fbLink = "itms-apps://itunes.apple.com/us/app/apple-store/id284882215"
+                            if #available(iOS 10.0, *) {
+                                if let url = URL(string: fbLink) {
+                                    UIApplication.shared.open(url, options: [:]) { _ in
+                                    }
+                                }
+                            } else {
+                                if let url = URL(string: fbLink) {
+                                    UIApplication.shared.openURL(url)
                                 }
                             }
-                        } else {
-                            if let url = URL(string: fbLink) {
-                                UIApplication.shared.openURL(url)
-                            }
+                            result(false)
                         }
-                        result(false)
                     }
+                } else {
+                    result(false)
                 }
-            } else {
-                result(false)
-            }
-        }else if(call.method.elementsEqual(_methodTwitter)){
-            let args = call.arguments as? Dictionary<String,Any>
-            shareTwitter(message: args!["msg"] as! String, url: args!["url"] as! String, result: result)
-        }
-        else if(call.method.elementsEqual(_methodInstagram)){
-            let args = call.arguments as? Dictionary<String,Any>
-            shareInstagram(args: args!)
-        }
-        else if(call.method.elementsEqual(_methodTelegramShare)){
-            let args = call.arguments as? Dictionary<String,Any>
-            shareToTelegram(message: args!["msg"] as! String, result: result )
-        }
-        else{
-            let args = call.arguments as? Dictionary<String,Any>
-            systemShare(message: args!["msg"] as! String,result: result)
+            case _methodTwitter:
+                let args = call.arguments as? Dictionary<String,Any>
+                shareTwitter(message: args!["msg"] as! String, url: args!["url"] as! String, result: result)
+            case _methodInstagram:
+                let args = call.arguments as? Dictionary<String,Any>
+                shareInstagram(args: args!)
+            case _methodTelegramShare:
+                let args = call.arguments as? Dictionary<String,Any>
+                shareToTelegram(message: args!["msg"] as! String, result: result )
+            case: _methodSystemShare:
+                let args = call.arguments as? Dictionary<String,Any>
+                systemShare(message: args!["msg"] as! String,result: result)
+            default:
+                break
         }
     }
     
