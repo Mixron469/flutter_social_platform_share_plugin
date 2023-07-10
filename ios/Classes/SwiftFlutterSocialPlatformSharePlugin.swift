@@ -126,7 +126,7 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
             case _methodTelegramShare:
                 let args = call.arguments as? Dictionary<String,Any>
                 shareToTelegram(message: args!["msg"] as! String, result: result )
-            case: _methodSystemShare:
+            case _methodSystemShare:
                 let args = call.arguments as? Dictionary<String,Any>
                 systemShare(message: args!["msg"] as! String,result: result)
             default:
