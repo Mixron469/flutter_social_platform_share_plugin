@@ -65,11 +65,9 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
                 {
                     let fbURL = URL(string: "fbapi://")
                     if let fbURL = fbURL {
-                        if AccessToken.isCurrentAccessTokenActive {
-                            if UIApplication.shared.canOpenURL(fbURL) {
-                                facebookShare(path)
-                                // result(nil)
-                            }
+                        if UIApplication.shared.canOpenURL(fbURL) {
+                            facebookShare(path)
+                            // result(nil)
                         } else {
                             let fbLink = "itms-apps://itunes.apple.com/us/app/apple-store/id284882215"
                             if #available(iOS 10.0, *) {
@@ -101,10 +99,8 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
                 {
                     let fbURL = URL(string: "fbapi://")
                     if let fbURL = fbURL {
-                        if AccessToken.isCurrentAccessTokenActive {
-                            if UIApplication.shared.canOpenURL(fbURL) {
-                                facebookShareLink(quote, url: url)
-                            }
+                        if UIApplication.shared.canOpenURL(fbURL) {
+                            facebookShareLink(quote, url: url)
                         } else {
                             let fbSafariLink = "https://m.facebook.com/sharer/sharer.php?app_id=" + (_fbAppId ?? "") + "&u=" + (url ?? "")
                             if let fbUrl = URL(string: fbSafariLink) {
