@@ -1,7 +1,15 @@
 import Flutter
 import UIKit
 import FBSDKShareKit
+import FacebookCore
 import PhotosUI
+
+extension UIApplication {
+    static var fbAppId: String? {
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+    }
+}
+
 public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, SharingDelegate {
     
     let _methodWhatsApp = "whatsapp_share";
@@ -13,6 +21,7 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
     let _methodInstagram = "instagram_share";
     let _methodSystemShare = "system_share";
     let _methodTelegramShare = "telegram_share";
+    let _fbAppId = Bundle.main.object(forInfoDictionaryKey: "FacebookAppID") as? String
     
     var result: FlutterResult?
     var documentInteractionController: UIDocumentInteractionController?
@@ -62,7 +71,7 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
                 {
                     let fbURL = URL(string: "fbapi://")
                     if let fbURL = fbURL {
-                        if UIApplication.shared.canOpenURL(fbURL) {
+                        if let accessToken = AccessToken.current, !accessToken.isExpired && UIApplication.shared.canOpenURL(fbURL) {
                             facebookShare(path)
                             // result(nil)
                         } else {
@@ -96,21 +105,13 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
                 {
                     let fbURL = URL(string: "fbapi://")
                     if let fbURL = fbURL {
-                        if UIApplication.shared.canOpenURL(fbURL) {
+                        if let accessToken = AccessToken.current, !accessToken.isExpired && UIApplication.shared.canOpenURL(fbURL) {
                             facebookShareLink(quote, url: url)
-                            // result(nil)
                         } else {
-                            let fbLink = "itms-apps://itunes.apple.com/us/app/apple-store/id284882215"
-                            if #available(iOS 10.0, *) {
-                                if let url = URL(string: fbLink) {
-                                    UIApplication.shared.open(url, options: [:]) { _ in
-                                    }
+                            let fbSafariLink = "https://m.facebook.com/sharer/sharer.php?app_id=" + _fbAppId + "&u=" + url
+                            if let url = URL(string: fbSafariLink) {
+                                    UIApplication.shared.openURL(fbSafariLink)
                                 }
-                            } else {
-                                if let url = URL(string: fbLink) {
-                                    UIApplication.shared.openURL(url)
-                                }
-                            }
                             result(false)
                         }
                     }
@@ -264,14 +265,14 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
         }
     }
 
-    func facebookShareLink(_ quote: String,
-                           url: String)
-    {
+    func facebookShareLink(_ quote: String, url: String) {
         let content = ShareLinkContent()
-        content.contentURL = URL.init(string: url)!
-        content.quote = quote
+        content.contentURL = URL.init(string: url as! String)!
+        content.quote = quote as? String
         let controller = UIApplication.shared.delegate?.window??.rootViewController
-        ShareDialog.show(viewController: controller, content: content, delegate: self)
+        let shareDialog = ShareDialog(viewController: controller, content: content, delegate: self)
+        shareDialog.mode = .automatic
+        shareDialog.show()
     }
     
     // share twitter params
