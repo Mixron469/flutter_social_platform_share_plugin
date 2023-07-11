@@ -106,10 +106,12 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
                                 facebookShareLink(quote, url: url)
                             }
                         } else {
-                            let fbSafariLink = "https://m.facebook.com/sharer/sharer.php?app_id=" + _fbAppId + "&u=" + url as String
-                            if let url = URL(string: fbSafariLink) {
-                                    UIApplication.shared.openURL(fbSafariLink)
+                            let fbSafariLink = "https://m.facebook.com/sharer/sharer.php?app_id=" + _fbAppId + "&u=" + url as? String
+                            if let fbUrl = URL(string: fbSafariLink) {
+                                if UIApplication.shared.canOpenURL(fbUrl) {
+                                    UIApplication.shared.openURL(fbUrl)
                                 }
+                            }
                             result(false)
                         }
                     }
