@@ -4,12 +4,6 @@ import FBSDKShareKit
 import FBSDKCoreKit
 import PhotosUI
 
-extension UIApplication {
-    static var fbAppId: String? {
-        return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
-    }
-}
-
 public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, SharingDelegate {
     
     let _methodWhatsApp = "whatsapp_share";
