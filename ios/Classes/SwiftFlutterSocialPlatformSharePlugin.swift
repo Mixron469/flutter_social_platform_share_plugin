@@ -1,7 +1,7 @@
 import Flutter
 import UIKit
 import FBSDKShareKit
-import FacebookCore
+import FBSDKCoreKit
 import PhotosUI
 
 extension UIApplication {
