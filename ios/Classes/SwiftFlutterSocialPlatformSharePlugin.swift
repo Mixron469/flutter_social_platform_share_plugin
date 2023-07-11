@@ -65,7 +65,7 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
                 {
                     let fbURL = URL(string: "fbapi://")
                     if let fbURL = fbURL {
-                        if let accessToken = AccessToken.current, !accessToken.isExpired {
+                        if AccessToken.isCurrentAccessTokenActive {
                             if UIApplication.shared.canOpenURL(fbURL) {
                                 facebookShare(path)
                                 // result(nil)
@@ -101,11 +101,9 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
                 {
                     let fbURL = URL(string: "fbapi://")
                     if let fbURL = fbURL {
-                        if let accessToken = AccessToken.current {
-                            if !accessToken.isExpired {
-                                if UIApplication.shared.canOpenURL(fbURL) {
-                                    facebookShareLink(quote, url: url)
-                                }
+                        if AccessToken.isCurrentAccessTokenActive {
+                            if UIApplication.shared.canOpenURL(fbURL) {
+                                facebookShareLink(quote, url: url)
                             }
                         } else {
                             let fbSafariLink = "https://m.facebook.com/sharer/sharer.php?app_id=" + (_fbAppId ?? "") + "&u=" + (url ?? "")
