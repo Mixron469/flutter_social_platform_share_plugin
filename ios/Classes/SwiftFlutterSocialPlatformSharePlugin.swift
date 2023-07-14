@@ -263,7 +263,7 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
 
     func facebookShareLink(_ quote: String, url: String) {
         let content = ShareLinkContent()
-        content.contentURL = URL.init(string: url as! String)!
+        content.contentURL = URL(string: url)
         content.quote = quote as? String
         let controller = UIApplication.shared.delegate?.window??.rootViewController
         let shareDialog = ShareDialog(viewController: controller, content: content, delegate: self)
