@@ -66,7 +66,7 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
                     let fbURL = URL(string: "fbapi://")
                     if let fbURL = fbURL {
                         if UIApplication.shared.canOpenURL(fbURL) {
-                            facebookShare(path)
+                            facebookShare(path, result: result)
                             // result(nil)
                         } else {
                             let fbLink = "itms-apps://itunes.apple.com/us/app/apple-store/id284882215"
@@ -78,6 +78,7 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
                             } else {
                                 if let url = URL(string: fbLink) {
                                     UIApplication.shared.openURL(url)
+                                    result("Success")
                                 }
                             }
                             result(false)
@@ -100,12 +101,13 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
                     let fbURL = URL(string: "fbapi://")
                     if let fbURL = fbURL {
                         if UIApplication.shared.canOpenURL(fbURL) {
-                            facebookShareLink(quote, url: url)
+                            facebookShareLink(quote, url: url, result: result)
                         } else {
                             let fbSafariLink = "https://m.facebook.com/sharer/sharer.php?app_id=" + (_fbAppId ?? "") + "&u=" + (url ?? "")
                             if let fbUrl = URL(string: fbSafariLink) {
                                 if UIApplication.shared.canOpenURL(fbUrl) {
                                     UIApplication.shared.openURL(fbUrl)
+                                    result("Success")
                                 }
                             }
                             result(false)
@@ -250,7 +252,7 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
         
     }
 
-    func facebookShare(_ imagePath: String?) {
+    func facebookShare(_ imagePath: String?, result: @escaping FlutterResult) {
         // NSURL* path = [[NSURL alloc] initWithString:call.arguments[@"path"]];
         if let image = UIImage(contentsOfFile: imagePath ?? "") {
             let photo = SharePhoto(image: image, isUserGenerated: true)
@@ -258,10 +260,11 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
             content.photos = [photo]
             let controller = UIApplication.shared.delegate?.window??.rootViewController
             ShareDialog.show(viewController: controller, content: content, delegate: self)
+            result("Facebook Share Success")
         }
     }
 
-    func facebookShareLink(_ quote: String, url: String) {
+    func facebookShareLink(_ quote: String, url: String, result: @escaping FlutterResult) {
         let content = ShareLinkContent()
         content.contentURL = URL(string: url)
         content.quote = quote as? String
@@ -269,6 +272,7 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
         let shareDialog = ShareDialog(viewController: controller, content: content, delegate: self)
         shareDialog.mode = .automatic
         shareDialog.show()
+        result("Facebook Share URL Success")
     }
     
     // share twitter params

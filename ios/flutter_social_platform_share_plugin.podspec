@@ -3,7 +3,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_social_platform_share_plugin'
-  s.version          = '0.0.1'
+  s.version          = '0.0.6'
   s.summary          = 'Flutter Plugin for sharing contents to social media.'
   s.description      = <<-DESC
 Flutter Plugin for sharing contents to social media.
@@ -15,9 +15,9 @@ Flutter Plugin for sharing contents to social media.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'FBSDKShareKit', '~> 15.1.0'
-  s.dependency 'FBSDKCoreKit', '~> 15.1.0'
-  s.dependency 'FBSDKLoginKit', '~> 15.1.0'
-  s.ios.deployment_target = '10.0'
+  s.dependency 'FBSDKShareKit', '~> 16.1.0'
+  s.dependency 'FBSDKCoreKit', '~> 16.1.0'
+  s.dependency 'FBSDKLoginKit', '~> 16.1.0'
+  s.ios.deployment_target = '11.0'
 end
 
