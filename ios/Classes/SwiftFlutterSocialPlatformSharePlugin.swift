@@ -15,7 +15,7 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
     let _methodInstagram = "instagram_share";
     let _methodSystemShare = "system_share";
     let _methodTelegramShare = "telegram_share";
-    let _fbAppId = Bundle.main.object(forInfoDictionaryKey: "FacebookAppID") as? String
+    // let _fbAppId = Bundle.main.object(forInfoDictionaryKey: "FacebookAppID") as? String
     
     var result: FlutterResult?
     var documentInteractionController: UIDocumentInteractionController?
@@ -103,7 +103,7 @@ public class SwiftFlutterSocialPlatformSharePlugin: NSObject, FlutterPlugin, Sha
                         if UIApplication.shared.canOpenURL(fbURL) {
                             facebookShareLink(quote, url: url, result: result)
                         } else {
-                            let fbSafariLink = "https://m.facebook.com/sharer/sharer.php?app_id=" + (_fbAppId ?? "") + "&u=" + (url ?? "")
+                            let fbSafariLink = "https://m.facebook.com/sharer/sharer.php?/" /*+ "*app_id=" + (_fbAppId ?? "")*/ +"&u=" + (url ?? "")
                             if let fbUrl = URL(string: fbSafariLink) {
                                 if UIApplication.shared.canOpenURL(fbUrl) {
                                     UIApplication.shared.openURL(fbUrl)
