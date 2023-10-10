@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:7.4.1'
     }
 }
 
@@ -23,7 +23,7 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 32
 
     defaultConfig {
         minSdkVersion 16
@@ -37,6 +37,6 @@ android {
 dependencies {
     // implementation 'com.facebook.android:facebook-share:5.15.3'
     // implementation 'com.facebook.android:facebook-share:15.1.0'
-    implementation 'com.facebook.android:facebook-android-sdk:15.1.0'
-    implementation 'com.twitter.sdk.android:twitter:3.1.1' //twitter share
+    implementation 'com.facebook.android:facebook-android-sdk:16.2.0'
+    implementation 'com.twitter.sdk.android:twitter:3.3.0' //twitter share
 }
